@@ -1,0 +1,207 @@
+<!doctype html>
+<!--
+  index.html - Vote Your GOAT
+
+  This file contains the static voting UI and a small script that sends a
+  vote to the Express API. The comments below explain every section in plain
+  language so you can follow what each piece does.
+-->
+<html lang="en">
+<head>
+  <!-- Standard document setup -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vote Your GOAT — NBA</title>
+  <!-- Link to the stylesheet that controls how the page looks -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- The main container centers content and gives page padding -->
+  <main class="container">
+
+    <!-- Header / hero area with logo and title -->
+    <!-- This is the first thing people see on the page. -->
+    <header class="hero">
+      <!-- Small logo image on the left. Uses a local file in the assets folder. -->
+      <img class="logo" src="assets/nbaLogo.jpg" alt="NBA Logo">
+      <div class="hero-content">
+        <h1>Vote Your GOAT</h1>
+        <p class="subtitle">Who is the NBA's Greatest of All Time? Cast your vote.</p>
+      </div>
+    </header>
+
+    <!-- Section that holds all the candidate cards (each card is one choice) -->
+    <section class="card-grid">
+      <!-- The voting form: when a user clicks Vote, JavaScript will read the
+           selected option and send it to the API. We use a regular <form>
+           so the markup is semantic, but submission is handled by JS. -->
+      <form id="voteForm" class="grid">
+
+        <!-- Each label acts as a selectable card. The radio input inside
+             the label is the actual form control. Clicking the card checks it. -->
+        <label class="card">
+          <!-- Radio input: the `name` groups radios so only one can be chosen. -->
+          <input type="radio" name="player" value="michael-jordan" required>
+          <!-- Player image (local file) -->
+          <img src="assets/MJ.webp" alt="Michael Jordan">
+          <div class="card-body">
+            <h3>Michael Jordan</h3>
+            <p>6× NBA Champion · 6× Finals MVP · 5× MVP</p>
+          </div>
+        </label>
+
+        <label class="card">
+          <input type="radio" name="player" value="lebron-james">
+          <img src="assets/lebron.webp" alt="LeBron James">
+          <div class="card-body">
+            <h3>LeBron James</h3>
+            <p>4× NBA Champion · 4× Finals MVP · 4× MVP · All-time leading scorer</p>
+          </div>
+        </label>
+
+        <label class="card">
+          <input type="radio" name="player" value="stephen-curry">
+          <img src="assets/stephenCurry.jpg" alt="Stephen Curry">
+          <div class="card-body">
+            <h3>Stephen Curry</h3>
+            <p>4× NBA Champion · 2× MVP · Revolutionary shooter</p>
+          </div>
+        </label>
+
+        <label class="card">
+          <input type="radio" name="player" value="kareem-abdul-jabbar">
+          <img src="assets/Kareem%20Abdul-jabbar.webp" alt="Kareem Abdul-Jabbar">
+          <div class="card-body">
+            <h3>Kareem Abdul-Jabbar</h3>
+            <p>6× NBA Champion · 6× MVP</p>
+          </div>
+        </label>
+
+        <label class="card">
+          <input type="radio" name="player" value="magic-johnson">
+          <img src="assets/Magic%20Johnson.webp" alt="Magic Johnson">
+          <div class="card-body">
+            <h3>Magic Johnson</h3>
+            <p>5× NBA Champion · 3× MVP · Legendary playmaker</p>
+          </div>
+        </label>
+
+        <!-- "Other" option: if someone wants to type their own name. -->
+        <label class="card card-additional">
+          <input type="radio" name="player" value="other">
+          <div class="card-body">
+            <h3>Other</h3>
+            <p>Pick your own GOAT</p>
+            <!-- Optional text input for a custom name. The JS will read this when
+                 the user submits the form and send it to the server if "Other" is chosen. -->
+            <input class="other-input" type="text" name="otherName" placeholder="Type a name">
+          </div>
+        </label>
+
+        <!-- Action buttons: Vote (submits using JS) and a link to see results -->
+        <div class="actions">
+          <button class="btn primary" type="submit">Vote</button>
+          <a class="btn ghost" href="results.html">See results</a>
+        </div>
+
+      </form>
+    </section>
+
+    <!-- Footer with author info -->
+    <footer class="footer">
+      <p>Aden Kingi 9821836</p>
+    </footer>
+  </main>
+
+  <!--
+    CLIENT-SIDE JAVASCRIPT: Vote Submission Logic
+    
+    This script handles the interactive voting functionality:
+    1. Captures form submission events
+    2. Reads the selected player and optional custom name
+    3. Sends the vote data to the API server
+    4. Handles success/error responses
+    5. Redirects to results page
+    
+    The script uses modern async/await syntax and fetch API for HTTP requests.
+  -->
+  <script>
+  (function(){
+    // Configuration: API server base URL
+    // This points to the Express.js server that handles vote storage
+    // Can be overridden by setting window.API_BASE before this script loads
+    const API_BASE = window.API_BASE || 'http://localhost:3000';
+
+    // Get references to DOM elements we need to interact with
+    const form = document.getElementById('voteForm');        // The voting form
+    if(!form) return; // Exit early if form doesn't exist (error prevention)
+
+    const submitBtn = form.querySelector('.btn.primary');   // The "Vote" button
+
+    // Set up form submission handler
+    // This runs when the user clicks the "Vote" button
+    form.addEventListener('submit', async (e) => {
+      // Prevent the default form submission behavior
+      // (which would reload the page and lose our JavaScript state)
+      e.preventDefault();
+
+      // Disable the submit button to prevent double-submission
+      // This provides visual feedback and prevents multiple API calls
+      if(submitBtn) submitBtn.disabled = true;
+
+      try{
+        // Extract form data using the FormData API
+        // This automatically reads all form inputs (radio buttons, text fields)
+        const fd = new FormData(form);
+        
+        // Get the selected player (from radio button value)
+        let player = fd.get('player');
+        
+        // Get the custom name if "Other" was selected
+        // Trim whitespace and handle empty strings
+        const otherName = (fd.get('otherName') || '').trim();
+
+        // Client-side validation: ensure a player was selected
+        if(!player){
+          alert('Please select a player');
+          return; // Exit early without making API call
+        }
+
+        // Prepare the data payload for the API
+        // This matches the format expected by the server controller
+        const body = { player, otherName };
+
+        // Make HTTP POST request to the API server
+        // Send vote data as JSON to the /api/votes endpoint
+        const res = await fetch(API_BASE + '/api/votes', {
+          method: 'POST',                                    // HTTP method
+          headers: { 'Content-Type': 'application/json' },  // Tell server we're sending JSON
+          body: JSON.stringify(body)                         // Convert object to JSON string
+        });
+
+        // Check if the server responded with an error
+        // HTTP status codes 200-299 are considered successful
+        if(!res.ok) throw new Error('Network error');
+
+        // Success! Redirect to results page to show updated vote counts
+        window.location.href = 'results.html';
+      }catch(err){
+        // Error handling: API server might be down or network issues
+        console.error('Vote failed:', err);
+        
+        // Show user-friendly error message
+        alert('Failed to submit vote. The app will still open the results page, but your vote may not be saved.');
+        
+        // Graceful fallback: still go to results page but indicate offline mode
+        // The ?offline=1 parameter tells results.html to show an appropriate message
+        window.location.href = 'results.html?offline=1';
+      }finally{
+        // Always re-enable the button, whether success or failure
+        // This allows users to try again if needed
+        if(submitBtn) submitBtn.disabled = false;
+      }
+    });
+  })();
+  </script>
+</body>
+</html>

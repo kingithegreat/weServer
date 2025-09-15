@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!--
+    results.html - Live tally page
+
+    This file displays the aggregated vote counts provided by the small
+    Express API. The JavaScript below fetches `/api/votes` and renders a
+    simple bar chart with counts and percentages. All behavior is commented
+    in plain language to make it easy to follow.
+  -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Results — Vote Your GOAT</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container">
+    <!-- Header area: title and short description -->
+    <header class="hero">
+      <div class="hero-content">
+        <h1>Results</h1>
+        <p class="subtitle">Live tally of votes saved by the API (if it is running).</p>
+      </div>
+    </header>
+
+    <!-- Main card that will hold the live results list -->
+    <section class="card">
+      <div class="card-body" style="width:100%">
+        <h3>Live Tally</h3>
+        <!--
+          resultsHolder is where the JavaScript will insert the list of players
+          and their bars. If the API is not running the script will show a
+          friendly message here.
+        -->
+        <div id="resultsHolder" style="margin-top:10px"></div>
+
+        <!-- Back button to return to the voting page -->
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+          <a class="btn ghost" href="index.html">Back</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>Votes are saved to MongoDB Atlas cloud database when the API is running.</p>
+    </footer>
+  </main>
+
+  <!--
+    CLIENT-SIDE JAVASCRIPT: Results Display and Live Updates
+    
+    This script handles the results page functionality:
+    1. Fetches vote data from the API server
+    2. Renders vote statistics as visual bars with percentages
+    3. Updates the display every 5 seconds for live results
+    4. Handles error cases when the API server is unavailable
+    5. Provides user-friendly messages for different states
+    
+    The script uses modern async/await syntax and automatic polling for real-time updates.
+  -->
+  <script>
+  (function(){
+    // Configuration: API server base URL (same as voting page)
+    // This must match the server running the vote storage API
+    const API_BASE = window.API_BASE || 'http://localhost:3000';
+
+    // Get reference to the DOM element where results will be displayed
+    const holder = document.getElementById('resultsHolder');
+
+    // Main function: Fetch vote results from the API and display them
+    // This function is called immediately and then every 5 seconds
+    async function fetchResults(){
+      try{
+        // Make HTTP GET request to fetch aggregated vote data
+        // The API returns: { ok: true, results: [{player: string, count: number}, ...] }
+        const res = await fetch(API_BASE + '/api/votes');
+        
+        // Check if the server responded successfully
+        if(!res.ok) throw new Error('Network error');
+        
+        // Parse the JSON response
+        const data = await res.json();
+        
+        // Render the results data (or empty array if no results)
+        render(data.results || []);
+      }catch(err){
+        // Handle errors: server down, network issues, etc.
+        console.error('Failed to load results:', err);
+        
+        // Display user-friendly error message in the results area
+        holder.innerHTML = '<p style="color:var(--muted)">Failed to load results. Is the API running?</p>';
+      }
+    }
+
+    // Render function: Convert vote data into HTML display
+    // Takes an array of {player, count} objects and creates visual bars
+    function render(rows){
+      // Handle empty state: no votes cast yet
+      if(!rows.length) {
+        return holder.innerHTML = '<p style="color:var(--muted)">No votes yet.</p>';
+      }
+
+      // Calculate total votes for percentage calculations
+      // Using reduce to sum all vote counts
+      const total = rows.reduce((sum, row) => sum + (row.count || 0), 0);
+
+      // Generate HTML for each player's results
+      // Creates a visual bar chart with player name, bar, and statistics
+      holder.innerHTML = rows.map(row => {
+        // Calculate percentage (rounded to nearest integer)
+        const percentage = total ? Math.round((row.count / total) * 100) : 0;
+        
+        // Return HTML template for this row
+        // Uses CSS classes for styling (defined in styles.css)
+        return `
+          <div class="result-row">
+            <!-- Player name (escaped for security) -->
+            <div class="label">${escapeHtml(row.player)}</div>
+            
+            <!-- Visual progress bar -->
+            <div class="bar">
+              <!-- Filled portion based on vote percentage -->
+              <div class="bar-fill" style="width:${percentage}%"></div>
+            </div>
+            
+            <!-- Vote count and percentage -->
+            <div class="count">${row.count} (${percentage}%)</div>
+          </div>
+        `;
+      }).join(''); // Join all row HTML into single string
+    }
+
+    // Security function: Escape HTML characters to prevent XSS attacks
+    // Converts dangerous characters (&, <, >, ", ') into safe HTML entities
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, function(match) {
+        const escapeMap = {
+          '&': '&amp;',    // Ampersand
+          '<': '&lt;',     // Less than
+          '>': '&gt;',     // Greater than
+          '"': '&quot;',   // Double quote
+          "'": '&#39;'     // Single quote
+        };
+        return escapeMap[match];
+      });
+    }
+
+    // Initialize the results display
+    // 1. Fetch and display results immediately when page loads
+    fetchResults();
+    
+    // 2. Set up automatic refresh every 5 seconds for live updates
+    // This makes the results page feel "live" as new votes come in
+    setInterval(fetchResults, 5000);
+  })();
+  </script>
+</body>
+</html>
