@@ -2,48 +2,61 @@
 <html lang="en">
 <head>
   <!--
-    results.html - Live tally page
+    results.html - Analytics page
 
-    This file displays the aggregated vote counts provided by the small
+    This file displays the aggregated data provided by the small
     Express API. The JavaScript below fetches `/api/votes` and renders a
     simple bar chart with counts and percentages. All behavior is commented
     in plain language to make it easy to follow.
   -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Results — Vote Your GOAT</title>
+  <title>Analytics — NBA Analytics</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Navigation bar -->
+  <nav class="nav-container">
+    <div class="nav-logo">
+      <img class="logo" src="assets/nbaLogo.jpg" alt="NBA Logo">
+      <span class="nav-title">NBA Analytics</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="results.html" class="active">Analytics</a></li>
+      <li><a href="about-us.html">About Us</a></li>
+    </ul>
+  </nav>
+  
   <main class="container">
     <!-- Header area: title and short description -->
     <header class="hero">
       <div class="hero-content">
-        <h1>Results</h1>
-        <p class="subtitle">Live tally of votes saved by the API (if it is running).</p>
+        <h1>Player Impact Analysis</h1>
+        <p class="subtitle">Live data visualization of player impact metrics from our analytics engine.</p>
       </div>
     </header>
 
     <!-- Main card that will hold the live results list -->
     <section class="card">
       <div class="card-body" style="width:100%">
-        <h3>Live Tally</h3>
+        <h3>Player Impact Metrics</h3>
         <!--
           resultsHolder is where the JavaScript will insert the list of players
-          and their bars. If the API is not running the script will show a
+          and their impact metrics. If the API is not running the script will show a
           friendly message here.
         -->
         <div id="resultsHolder" style="margin-top:10px"></div>
 
-        <!-- Back button to return to the voting page -->
+        <!-- Back button to return to the main page -->
         <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-          <a class="btn ghost" href="index.html">Back</a>
+          <a class="btn ghost" href="index.html">Back to Analysis</a>
         </div>
       </div>
     </section>
 
     <footer class="footer">
-      <p>Votes are saved to MongoDB Atlas cloud database when the API is running.</p>
+      <p>&copy; 2025 NBA Analytics. Data visualization powered by our MongoDB Atlas cloud database.</p>
     </footer>
   </main>
 

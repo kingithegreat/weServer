@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
-  index.html - Vote Your GOAT
+  index.html - NBA Analytics
 
-  This file contains the static voting UI and a small script that sends a
+  This file contains the interactive analytics UI and a small script that sends a
   vote to the Express API. The comments below explain every section in plain
   language so you can follow what each piece does.
 -->
@@ -11,11 +11,24 @@
   <!-- Standard document setup -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Vote Your GOAT — NBA</title>
+  <title>Home — NBA Analytics</title>
   <!-- Link to the stylesheet that controls how the page looks -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <!-- Navigation bar -->
+  <nav class="nav-container">
+    <div class="nav-logo">
+      <img class="logo" src="assets/nbaLogo.jpg" alt="NBA Logo">
+      <span class="nav-title">NBA Analytics</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="results.html">Analytics</a></li>
+      <li><a href="about-us.html">About Us</a></li>
+    </ul>
+  </nav>
+
   <!-- The main container centers content and gives page padding -->
   <main class="container">
 
@@ -25,8 +38,8 @@
       <!-- Small logo image on the left. Uses a local file in the assets folder. -->
       <img class="logo" src="assets/nbaLogo.jpg" alt="NBA Logo">
       <div class="hero-content">
-        <h1>Vote Your GOAT</h1>
-        <p class="subtitle">Who is the NBA's Greatest of All Time? Cast your vote.</p>
+        <h1>NBA Player Analysis</h1>
+        <p class="subtitle">Which NBA legend's stats and impact define the greatest of all time? Submit your analysis.</p>
       </div>
     </header>
 
@@ -86,30 +99,30 @@
           </div>
         </label>
 
-        <!-- "Other" option: if someone wants to type their own name. -->
+        <!-- "Custom Analysis" option: for adding a player not listed -->
         <label class="card card-additional">
           <input type="radio" name="player" value="other">
           <div class="card-body">
-            <h3>Other</h3>
-            <p>Pick your own GOAT</p>
-            <!-- Optional text input for a custom name. The JS will read this when
-                 the user submits the form and send it to the server if "Other" is chosen. -->
-            <input class="other-input" type="text" name="otherName" placeholder="Type a name">
+            <h3>Custom Analysis</h3>
+            <p>Analyze another player's impact</p>
+            <!-- Optional text input for a custom player. The JS will read this when
+                 the user submits the form and send it to the server if "Custom Analysis" is chosen. -->
+            <input class="other-input" type="text" name="otherName" placeholder="Enter player name">
           </div>
         </label>
 
         <!-- Action buttons: Vote (submits using JS) and a link to see results -->
         <div class="actions">
-          <button class="btn primary" type="submit">Vote</button>
-          <a class="btn ghost" href="results.html">See results</a>
+          <button class="btn primary" type="submit">Submit Analysis</button>
+          <a class="btn ghost" href="results.html">View Analytics</a>
         </div>
 
       </form>
     </section>
 
-    <!-- Footer with author info -->
+    <!-- Footer with company info -->
     <footer class="footer">
-      <p>Aden Kingi 9821836</p>
+      <p>&copy; 2025 NBA Analytics. Bringing data-driven insights to basketball enthusiasts.</p>
     </footer>
   </main>
 
