@@ -1,17 +1,34 @@
 # NBA Analytics — Professional Basketball Analytics Platform
 
-## 🏀 What This Is
+## 🏀 Quick Overview
 
-**NBA Analytics** is a modern full-stack web application that provides data-driven insights into NBA player performance and impact. The platform allows users to submit player analysis data and view real-time analytics through interactive visualizations.
+**NBA Analytics** is a modern full-stack web application that provides data-driven insights into NBA player performance and impact. This platform features a professional business website with real-time analytics powered by MongoDB Atlas.
 
-## 🎯 Key Features
+## 📖 Complete Documentation
 
-- **Professional Business Website**: Complete with navigation, about us page, and company branding
-- **Player Impact Analysis**: Interactive interface for analyzing NBA player performance
-- **Real-time Analytics Dashboard**: Live data visualization powered by MongoDB Atlas
-- **Modern UI/UX**: Dark theme with glass morphism effects and smooth animations
-- **Cloud Database**: Scalable MongoDB Atlas integration for reliable data storage
-- **Responsive Design**: Works seamlessly on desktop, tablet, and mobile devices
+**📋 For full project documentation, setup instructions, API reference, and technical specifications, see:**  
+**→ [NBA_ANALYTICS_MASTER_REPORT.md](./NBA_ANALYTICS_MASTER_REPORT.md)**
+
+## ⚡ Quick Start
+
+1. **Install Dependencies:**
+   ```bash
+   cd api
+   npm install
+   ```
+
+2. **Configure Database:**
+   - Create MongoDB Atlas account
+   - Update `.env` file with connection string
+
+3. **Start Application:**
+   ```bash
+   npm start
+   ```
+
+4. **Open in Browser:**
+   - Open `index.html` in your browser
+   - Visit API at `http://localhost:3001`
 
 ## 📁 Project Structure
 
@@ -31,95 +48,28 @@ nba-analytics/
     │   ├── controllers/ # Business logic
     │   └── routes/      # API endpoints
     ├── package.json     # Dependencies and scripts
-    └── .env            # MongoDB Atlas configuration
+    └── .env            # Environment configuration
 ```
 
-## 🚀 Quick Start Guide
+## 🎯 Key Features
 
-### Prerequisites
-- Node.js (v14 or higher)
-- npm (Node Package Manager)
-- MongoDB Atlas account with configured cluster
+- **Professional Business Website**: Complete navigation and company branding
+- **Real-time Analytics Dashboard**: Live data visualization with auto-refresh
+- **MongoDB Atlas Integration**: Cloud database with optimized performance
+- **Modern UI/UX**: Dark theme with glass morphism effects
+- **Responsive Design**: Works on desktop, tablet, and mobile
 
-### 1. Start the API Server
+## � Quick Links
 
-```powershell
-# Navigate to the API directory
-cd "C:\Users\adenk\Desktop\level 7\web\website\vote-your-goat\api"
+- **📊 [Live Demo](./index.html)** - Open the NBA Analytics platform
+- **� [Analytics Dashboard](./results.html)** - View real-time player impact data  
+- **🏢 [About Us](./about-us.html)** - Company information and team
+- **🔌 [API Health Check](http://localhost:3001)** - Verify backend status
 
-# Install dependencies (first time only)
-npm install
+## � Support
 
-# Start the server
-npm start
-```
-
-You should see:
-```
-✅ Connected to MongoDB successfully
-Vote API listening on http://localhost:3000
-```
-
-### 2. Open the Website
-
-Simply open `index.html` in your web browser. The website will automatically connect to the API running on localhost:3000.
-
-### 3. Explore the Platform
-
-- **Home Page** (`index.html`): Submit player analysis data
-- **Analytics Dashboard** (`results.html`): View real-time data visualizations
-- **About Us** (`about-us.html`): Learn about NBA Analytics company and team
-
-## 🌐 Live Usage
-
-1. **Submit Analysis**: Select an NBA player and submit analysis data
-2. **View Results**: Navigate to the Analytics page to see live data
-3. **Real-time Updates**: Data refreshes automatically every 5 seconds
-4. **Multi-device Support**: Submit data from different devices and see updates in real-time
-
-## 🛠️ Technical Stack
-
-- **Frontend**: HTML5, CSS3, Vanilla JavaScript
-- **Backend**: Node.js, Express.js
-- **Database**: MongoDB Atlas (Cloud)
-- **ODM**: Mongoose
-- **Deployment**: Local development server
-
-## 📊 API Endpoints
-
-- `POST /api/votes` - Submit player analysis data
-- `GET /api/votes` - Retrieve aggregated analytics data
-
-## 🔧 Configuration
-
-### MongoDB Atlas Setup
-1. Create a MongoDB Atlas account
-2. Set up a cluster
-3. Configure network access (whitelist your IP)
-4. Update the connection string in `.env`
-
-### Environment Variables
-```
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/database
-PORT=3000
-```
-
-## 🎨 Design Features
-
-- **Modern Dark Theme**: Professional appearance with gradient backgrounds
-- **Glass Morphism Effects**: Contemporary UI with backdrop filters
-- **Smooth Animations**: Enhanced user experience with CSS transitions
-- **Responsive Layout**: Optimized for all screen sizes
-- **Interactive Elements**: Hover effects and visual feedback
-
-## 👥 Company Information
-
-NBA Analytics is a professional basketball analytics company specializing in data-driven insights for players, teams, and enthusiasts. Our platform combines advanced statistical analysis with intuitive visualizations to uncover the hidden stories behind basketball greatness.
-
-## 📄 License
-
-This project is licensed under the MIT License.
+For issues, questions, or detailed technical information, refer to the comprehensive documentation in `NBA_ANALYTICS_MASTER_REPORT.md`.
 
 ---
 
-*Developed by NBA Analytics Team - Bringing data-driven insights to basketball enthusiasts worldwide.*
+**🏀 NBA Analytics - Professional Basketball Data Insights Platform**
